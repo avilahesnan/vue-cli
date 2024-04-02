@@ -39,6 +39,7 @@
 import FilmesListaItem from './FilmesListaItem.vue'
 import FilmesListaItemEditar from './FilmesListaItemEditar.vue'
 import FilmesListaItemInfo from './FilmesListaItemInfo.vue'
+import { eventBus } from '../main'
 
 export default {
   components: {
@@ -61,7 +62,19 @@ export default {
     editarFilme (filme) {
       this.editar = true
       this.filmeSelecionado = filme
+    },
+    atualizarFilme (filmeAtualizado) {
+      const index = this.filmes.findIndex(filme => (filme.id === filmeAtualizado.id))
+      this.filmes.splice(index, 1, filmeAtualizado)
+      this.filmeSelecionado = undefined
+      this.editar = false
     }
+  },
+  created () {
+    eventBus.$on('selecionarFilme', (filmeSelecionado) => {
+      this.filmeSelecionado = filmeSelecionado
+    })
+    eventBus.$on('atualizarFilme', this.atualizarFilme)
   }
 }
 </script>

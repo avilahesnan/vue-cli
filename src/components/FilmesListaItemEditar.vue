@@ -8,7 +8,8 @@
       type="text"
       class="form-control"
       placeholder="Insira o título"
-      :value="filme.titulo">
+      :value="filmeSelecionado.titulo"
+      @input="filmeSelecionado = { propriedade : 'titulo', valor: $event.target.value }">
     </div>
     <div class="form-group">
       <label>Ano:</label>
@@ -16,17 +17,47 @@
       type="text"
       class="form-control"
       placeholder="Insira o ano"
-      :value="filme.ano">
+      :value="filmeSelecionado.ano"
+      @input="filmeSelecionado = { propriedade : 'ano', valor: $event.target.value }">
     </div>
+
+    <button @click="salvarFilme" class="btn btn-primary float-end">Salvar</button>
   </div>
 </template>
 
 <script>
+
+import { eventBus } from '../main'
+
 export default {
   props: {
     filme: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      filmeLocal: this.filme
+    }
+  },
+  computed: {
+    filmeSelecionado: {
+      set (dados) {
+        this.filmeLocal = Object.assign(
+          {},
+          this.filmeLocal,
+          { [dados.propriedade]: dados.valor }
+        )
+      },
+      get () {
+        return this.filme
+      }
+    }
+  },
+  methods: {
+    salvarFilme (event) {
+      eventBus.atualizarFilme(this.filmeLocal)
     }
   }
 }
