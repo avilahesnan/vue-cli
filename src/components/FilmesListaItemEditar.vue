@@ -59,6 +59,14 @@ export default {
     salvarFilme (event) {
       eventBus.atualizarFilme(this.filmeLocal)
     }
+  },
+  watch: {
+    filme (novoFilme) {
+      this.filmeLocal = Object.assign(
+        {},
+        novoFilme
+      )
+    }
   }
 }
 </script>
